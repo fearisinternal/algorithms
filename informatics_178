@@ -1,0 +1,62 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Lesson
+{
+    struct Edge{
+        public int to;
+        public int wei;
+        public Edge (int to, int wei)
+        {
+            this.to = to; this.wei = wei;
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            List<List<Edge>> g = new List<List<Edge>>();
+            string[] str = Console.ReadLine().Split(' ');
+            int N = int.Parse(str[0]), M = int.Parse(str[1]);
+            N++; M++;
+            int[] R = new int[N];
+            for (int i = 1; i < N; i++)
+            {
+                g.Add(new List<Edge>());
+                R[i] = 30000;
+            }
+            R[1] = 0;
+
+            for (int i = 1; i < M; i++)
+            {
+                str = Console.ReadLine().Split(' ');
+                int from = int.Parse(str[0]), to = int.Parse(str[1]), wei = int.Parse(str[2]);
+                g[from].Add(new Edge(to, wei));
+            }
+
+            Queue<int> q = new Queue<int>();
+            q.Enqueue(1);
+
+            while (q.Count != 0)
+            {
+                int from = q.Dequeue();
+                for (int i=0; i<g[from].Count; i++)
+                {
+                    if (R[g[from][i].to] > R[from] + g[from][i].wei)
+                    {
+                        R[g[from][i].to] = R[from] + g[from][i].wei;
+                    }
+                    q.Enqueue(g[from][i].to);
+                }
+            }
+            for (int i = 1; i < N; i++)
+            {
+                Console.Write(R[i] + " ");
+            }
+        }
+    }
+}
